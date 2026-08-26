@@ -1,0 +1,59 @@
+services:
+  halo:
+    image: halohub/halo:2
+    container_name: halo-shorekeeper-blog
+    restart: always
+    depends_on:
+      halodb:
+        condition: service_healthy
+    networks:
+      - halo-network
+    volumes:
+      - ./halo-data:/root/.halo2
+    ports:
+      - "127.0.0.1:8090:8090"
+    command:
+      - --spring.r2dbc.url=r2dbc:pool:postgresql://halodb:5432/halo
+      - --spring.r2dbc.username=halo
+      - --spring.r2dbc.password=halo_secret_pass_luna
+      - --spring.sql.init.platform=postgresql
+      - --halo.external-url=https://shore-keeper.com/
+      - --server.port=8090
+
+  halodb:
+    image: postgres:16-alpine
+    container_name: halo-shorekeeper-db
+    restart: always
+    networks:
+      - halo-network
+    volumes:
+      - ./pg-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=halo
+      - POSTGRES_USER=halo
+      - POSTGRES_PASSWORD=halo_secret_pass_luna
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U halo -d halo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  caddy:
+    image: caddy:alpine
+    container_name: halo-shorekeeper-caddy
+    restart: always
+    depends_on:
+      - halo
+    networks:
+      - halo-network
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_data:/data
+      - ./caddy_config:/config
+
+networks:
+  halo-network:
+    name: halo-network

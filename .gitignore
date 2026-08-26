@@ -1,0 +1,16 @@
+# Environment & Secrets
+.env
+.env.*
+
+# System & Cache
+._*
+.DS_Store
+__pycache__/
+*.pyc
+
+# Halo, Database & Caddy Persistent Volumes
+halo-data/
+pg-data/
+caddy_data/
+caddy_config/
+

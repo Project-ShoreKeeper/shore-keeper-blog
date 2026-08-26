@@ -1,0 +1,3 @@
+[submodule "theme-moesora"]
+	path = theme-moesora
+	url = https://github.com/Project-ShoreKeeper/theme-moesora.git

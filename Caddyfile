@@ -1,0 +1,3 @@
+shore-keeper.com {
+    reverse_proxy halo:8090
+}
