@@ -8,9 +8,12 @@
 __pycache__/
 *.pyc
 
+# Logs
+backup.log
+*.log
+
 # Halo, Database & Caddy Persistent Volumes
 halo-data/
 pg-data/
 caddy_data/
 caddy_config/
-
